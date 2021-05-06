@@ -1,21 +1,40 @@
 <template>
   <div id="app">
+    <Nav msg="[210508]유승현" />
+    <router-view />
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <!-- <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link> -->
     </div>
-    <router-view/>
   </div>
 </template>
 
+<script lang="ts">
+// import defineComponent from 'vue';
+import { Component, Vue } from 'vue-property-decorator';
+import Nav from '@/components/Nav.vue'; // @ is an alias to /src
+
+@Component({
+  components: {
+    Nav,
+  },
+})
+// const App = defineComponent({
+//   // type inference enabled
+// });
+export default class App extends Vue {}
+</script>
+
 <style lang="scss">
-#app {
+@import '@/assets/scss/reset.scss';
+
+/* #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
+} */
 
 #nav {
   padding: 30px;

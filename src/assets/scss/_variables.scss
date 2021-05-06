@@ -1,0 +1,32 @@
+$baseColor: #00c854 !default;
+$lightGrayColor: #e1e4e7 !default;
+$darkGrayColor: #495057 !default;
+$borderDark: rgba($baseColor, 0.88);
+
+@mixin flex($justify-content: null, $align-items: null) {
+  display: flex;
+  justify-content: $justify-content;
+  align-items: $align-items;
+  @content;
+}
+
+@mixin size($w: null, $h: null) {
+  width: $w;
+  height: $h;
+}
+
+@mixin font(
+  $size: 16px,
+  $weight: normal,
+  $family: SpoqaHanSans,
+  $style: normal,
+  $variant: normal
+) {
+  font: {
+    size: $size;
+    family: $family;
+    weight: $weight;
+    style: $style;
+    variant: variant;
+  }
+}
