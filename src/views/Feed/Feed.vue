@@ -1,10 +1,12 @@
 <template>
   <main id="feedPage">
+    <!-- 테스트 후 삭제 예정 -->
     <button type="button" @click="increase">증가</button>
     <button type="button" @click="decrease">감소</button>
     <div>{{ count }}</div>
     <!-- <div @click="getList">asdasd</div> -->
-    <div>{{ test }}</div>
+    <div>{{ isToggleBtn }}</div>
+    <!-- 테스트 후 삭제 예정 -->
     <section class="mainSection">
       <aside class="sideBar">
         <button type="button" class="loginBtn">로그인</button>
@@ -75,30 +77,28 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace, State, Getter, Action, Mutation } from 'vuex-class';
+import { namespace } from 'vuex-class';
 import axios from 'axios';
 
 const FeedModule = namespace('Feed');
 
 @Component
 export default class Feed extends Vue {
-  @FeedModule.State('test')
-  private readonly test!: string;
-
+  // [x: string]: any;
   @FeedModule.State('isToggleBtn')
-  private readonly isToggleBtn!: boolean;
+  public readonly 'isToggleBtn': boolean;
 
   @FeedModule.Getter('count')
-  private readonly count!: number;
+  public readonly 'count': number;
 
   @FeedModule.Action('filterToggleEvent')
-  public readonly filterToggleEvent: any;
-
+  public readonly 'filterToggleEvent': any;
   @FeedModule.Action('increase')
-  public readonly increase: any;
-
+  public readonly 'increase': any;
   @FeedModule.Action('decrease')
-  public readonly decrease: any;
+  public readonly 'decrease': any;
+  @FeedModule.Action('getList')
+  public readonly 'getList': any;
 
   // public getList<T>(url = `${BaseURL}/api/list`): Promise<T> {
   //   return fetch(url, {
@@ -117,20 +117,9 @@ export default class Feed extends Vue {
   //     return res.json();
   //   });
   // }
-
-  // public getList
-  // axios.get
-
-  // computed: {
-
-  // }
-  @FeedModule.Action('getList')
-  public readonly getList: any;
-
   public created() {
     this.getList();
   }
-  // methods: {};
 }
 </script>
 
