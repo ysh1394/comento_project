@@ -1,40 +1,69 @@
 import { Module } from 'vuex';
 import { RootState } from '@/store/index';
+import { getList, getCategory } from '@/api/feed';
 
 interface FeedModule {
-  // data: string;
+  isToggleBtn: boolean;
+  test: string;
   count: number;
+  params: {
+    page: number;
+    ord: string[];
+    limit: number;
+    category: string[];
+  };
+  id: number;
 }
 
-const feed: Module<FeedModule, RootState> = {
+const Feed: Module<FeedModule, RootState> = {
   namespaced: true,
   state: {
-    // data: 'feedModule',
+    isToggleBtn: true,
+    test: 'feedModule',
     count: 0,
+    params: {
+      page: 1,
+      ord: [],
+      limit: 0,
+      category: [],
+    },
+    id: 0,
   },
   mutations: {
-    // setData(state, data: string) {
-    //   state.data = data;
-    // },
+    setToggle(state, isToggleBtn: boolean) {
+      state.isToggleBtn = isToggleBtn;
+    },
     setCount(state, count: number) {
       state.count = count;
     },
   },
   actions: {
-    // setRootData({ commit }, data: string) {
-    //   commit('setData', data);
-    // },
+    filterToggleEvent({ state, commit }, e: any) {
+      if (e.target.className === 'filterBtnOff') {
+        commit('setToggle', !state.isToggleBtn);
+      }
+    },
     increase({ state, commit }) {
       commit('setCount', state.count + 1);
     },
     decrease({ state, commit }) {
       commit('setCount', state.count - 1);
     },
+    // Object.assign(state.params, { page: state.params.page });
+    async getList({ state }) {
+      const result = await getList(state.params.category);
+      console.log(result);
+    },
+
+    // async getCategory({ state }) {
+    //   const result = await getCategory(state.params);
+    //   console.log(result);
+    // },
   },
   getters: {
-    // data: (state) => state.data,
+    test: (state) => state.test,
     count: (state) => state.count,
   },
 };
 
-export default feed;
+export default Feed;

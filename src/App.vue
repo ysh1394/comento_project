@@ -10,6 +10,7 @@
 </template>
 
 <script lang="ts">
+// import defineComponent from 'vue';
 import { Component, Vue } from 'vue-property-decorator';
 import Nav from '@/components/Nav.vue'; // @ is an alias to /src
 
@@ -18,19 +19,22 @@ import Nav from '@/components/Nav.vue'; // @ is an alias to /src
     Nav,
   },
 })
+// const App = defineComponent({
+//   // type inference enabled
+// });
 export default class App extends Vue {}
 </script>
 
 <style lang="scss">
 @import '@/assets/scss/reset.scss';
 
-#app {
+/* #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
+} */
 
 #nav {
   padding: 30px;

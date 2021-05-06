@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
-import feed from '@/store/modules/feed';
+import Feed from '@/store/modules/feed';
 
 Vue.use(Vuex);
 
@@ -9,7 +9,7 @@ export interface RootState {
 }
 const store: StoreOptions<RootState> = {
   modules: {
-    feed,
+    Feed,
   },
   state: {
     data: 'root',

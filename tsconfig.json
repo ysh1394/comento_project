@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "module": "esnext", // common.js 등의 모듈 관련 설정
     "strict": true, // true: 엄격모드
     "jsx": "preserve",
@@ -10,14 +10,24 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
+    // "sourceMap": true,
     "baseUrl": ".",
     "types": ["webpack-env"],
     "paths": {
       "@/*": ["src/*"]
     },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    // "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    "outDir": "dist", // 여기서부터 새로추가
+    // "target": "ES5",
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "declaration": true,
+    "declarationDir": "dist",
+    "allowJs": true,
+    "lib": ["ES6", "DOM"]
+    // "experimentalDecorators": true
   },
+  "files": ["src/main.ts"], // 새로 추가
   // include: builder가 PATH밑에 파일들을 자바스크립트 파일로 컴파일 해줌
   "include": [
     "src/**/*.ts",

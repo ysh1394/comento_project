@@ -3,8 +3,8 @@
     <button type="button" @click="increase">증가</button>
     <button type="button" @click="decrease">감소</button>
     <div>{{ count }}</div>
-    <div>asdasd</div>
-    <div>{{ $store.state }}</div>
+    <!-- <div @click="getList">asdasd</div> -->
+    <div>{{ test }}</div>
     <section class="mainSection">
       <aside class="sideBar">
         <button type="button" class="loginBtn">로그인</button>
@@ -71,44 +71,71 @@
       </section>
     </section>
   </main>
-  <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" /> -->
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { State, Getter, Action, Mutation } from 'vuex-class';
+import { namespace, State, Getter, Action, Mutation } from 'vuex-class';
+import axios from 'axios';
+
+const FeedModule = namespace('Feed');
 
 @Component
 export default class Feed extends Vue {
-  // @State public readonly count!: number;
-  @Getter public readonly count!: number;
-  public isToggleBtn: boolean = true;
+  @FeedModule.State('test')
+  private readonly test!: string;
 
-  public test: string = '테스트';
+  @FeedModule.State('isToggleBtn')
+  private readonly isToggleBtn!: boolean;
 
-  public filterToggleEvent(e: any) {
-    if (e.target.className === 'filterBtnOff') {
-      this.isToggleBtn = !this.isToggleBtn;
-    }
-  }
+  @FeedModule.Getter('count')
+  private readonly count!: number;
 
-  @Action public readonly increase: any;
-  @Action public readonly decrease: any;
-  @Mutation public readonly setCount: any;
+  @FeedModule.Action('filterToggleEvent')
+  public readonly filterToggleEvent: any;
+
+  @FeedModule.Action('increase')
+  public readonly increase: any;
+
+  @FeedModule.Action('decrease')
+  public readonly decrease: any;
+
+  // public getList<T>(url = `${BaseURL}/api/list`): Promise<T> {
+  //   return fetch(url, {
+  //     method: 'GET',
+  //     headers: {
+  //       Accept: 'application/json',
+  //     },
+  //     // params: {
+  //     //   page: int,
+  //     //   ord: string(asc, desc),
+  //     //   category: array(category_id),
+  //     //   limit: int(perPage),
+  //     // },
+  //   }).then((res) => {
+  //     console.log(res);
+  //     return res.json();
+  //   });
+  // }
+
+  // public getList
+  // axios.get
 
   // computed: {
 
   // }
+  @FeedModule.Action('getList')
+  public readonly getList: any;
 
-  // created() {
-  //   this.getList();
-  // }
+  public created() {
+    this.getList();
+  }
   // methods: {};
 }
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/_variables.scss';
+/* @import '@/assets/scss/_variables.scss'; */
 
 #feedPage {
   @include flex(center, center);
