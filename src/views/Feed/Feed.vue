@@ -1,12 +1,5 @@
 <template>
   <main id="feedPage">
-    <!-- 테스트 후 삭제 예정 -->
-    <button type="button" @click="increase">증가</button>
-    <button type="button" @click="decrease">감소</button>
-    <div>{{ count }}</div>
-    <!-- <div @click="getList">asdasd</div> -->
-    <div>{{ isToggleBtn }}</div>
-    <!-- 테스트 후 삭제 예정 -->
     <section class="mainSection">
       <aside class="sideBar">
         <button type="button" class="loginBtn">로그인</button>
@@ -31,25 +24,45 @@
           </ul>
           <button type="button">필터</button>
         </section>
-        <article class="articleSection">
-          <div class="categoryPart">
-            <p>category_name</p>
-            <p>id</p>
-          </div>
-          <div class="authorPart">
-            <p>user_id</p>
-            <p>create_at(2020-02-02)</p>
-          </div>
-          <!-- {list.description.length > 25
-                  ? `${list.description.slice(0, 25)}...`
-                  : list.description} -->
-          <h1>
-            Title Title Title Title Title Title Title Title Title Title Title
-            Title Title Title
-          </h1>
-          <h2>content content content content content</h2>
-        </article>
-        <article class="adSection">
+        <div>
+          <article
+            class="articleSection"
+            v-for="(list, idx) in listData"
+            :key="list.id"
+            ref="test"
+          >
+            <!-- v-on="scroll:scrollFunction" -->
+            <!-- <template v-if="(idx + 1) % 4 !== 0"> -->
+            <div class="categoryPart">
+              <div>length : {{ idx + 1 }}</div>
+              <div>el : {{}}</div>
+              <p>categoy_id : {{ list.category_id }}</p>
+              <p>id : {{ list.id }}</p>
+            </div>
+            <div class="authorPart">
+              <p>user_id : {{ list.user_id }}</p>
+              <p>
+                created_at :
+                {{ list.created_at.slice(0, list.created_at.indexOf('T')) }}
+              </p>
+            </div>
+            <h1>
+              {{
+                list.title.length > 25
+                  ? `${list.title.slice(0, 25)}...`
+                  : list.title
+              }}
+            </h1>
+            <h2>
+              {{
+                list.contents.length > 25
+                  ? `${list.contents.slice(0, 25)}...`
+                  : list.contents
+              }}
+            </h2>
+            <!-- </template> -->
+          </article>
+          <!-- <article class="adSection">
           <p>sponsored</p>
           <div>
             <img src="@/assets/images/style1.png" alt="sample" />
@@ -69,36 +82,62 @@
               </h2>
             </div>
           </div>
-        </article>
+        </article> -->
+        </div>
       </section>
+
+      <template id="container"></template>
     </section>
   </main>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+// import Vue from 'vue';
 import { namespace } from 'vuex-class';
-import axios from 'axios';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 const FeedModule = namespace('Feed');
 
-@Component
+// export default Vue.extend({
+//   data() {
+//     return {};
+//   },
+//   computed: {
+//     ...mapState('feed', ['isToggleBtn']),
+//     ...mapGetters('feed', ['listData']),
+//   },
+
+//   methods: {
+//     ...mapActions('feed', ['filterToggleEvent', 'getList', 'changeSort']),
+//   },
+//   created() {
+//     this.getList();
+//     console.log('listData >>>', this.listData);
+//   },
+// });
+
+@Component({
+  computed: {},
+})
 export default class Feed extends Vue {
   // [x: string]: any;
+
   @FeedModule.State('isToggleBtn')
   public readonly 'isToggleBtn': boolean;
 
-  @FeedModule.Getter('count')
-  public readonly 'count': number;
+  // @FeedModule.State('listData')
+  // public readonly 'listData': object;
+
+  @FeedModule.Getter('listData')
+  public readonly 'listData': string[];
 
   @FeedModule.Action('filterToggleEvent')
   public readonly 'filterToggleEvent': any;
-  @FeedModule.Action('increase')
-  public readonly 'increase': any;
-  @FeedModule.Action('decrease')
-  public readonly 'decrease': any;
   @FeedModule.Action('getList')
   public readonly 'getList': any;
+  @FeedModule.Action('changeSort')
+  public readonly 'changeSort': any;
 
   // public getList<T>(url = `${BaseURL}/api/list`): Promise<T> {
   //   return fetch(url, {
@@ -117,8 +156,76 @@ export default class Feed extends Vue {
   //     return res.json();
   //   });
   // }
+  public aaa(e: any) {
+    console.log('e >>>', e);
+    console.log('sd');
+    console.log('sd');
+
+    // if (this.$el.scrollTop)
+  }
+
+  public handleNotificationListScroll(e: any) {
+    const { scrollHeight, scrollTop, clientHeight } = e.target;
+    const isAtTheBottom = scrollHeight === scrollTop + clientHeight;
+    // 일정 한도 밑으로 내려오면 함수 실행
+    // if (isAtTheBottom) this.handleLoadMore();
+    console.log('isAtTheBottom >>.', isAtTheBottom);
+    console.log('scrollHeight >>.', scrollHeight);
+    console.log('scrollTop >>.', scrollTop);
+    console.log('clientHeight >>.', clientHeight);
+  }
+
+  // 내려오면 api 호출하여 아래에 더 추가, total값 최대이면 호출 안함
+  //  public handleLoadMore() {
+  //     if (this.listData.length < this.total) {
+  //       const params = {
+  //         limit: this.params.limit,
+  //         page: this.params.page + 1
+  //       };
+  //       this.$store.commit(
+  //         "notification/SET_PARAMS",
+  //         this.filterValue ? { ...params, type: this.filterValue } : params
+  //       );
+  //       this.dispatchGetNotifications(false);
+  //     }
+  //   },
+
+  public handleScroll(event: any) {
+    // Any code to be executed when the window is scrolled
+    // console.log('event >>>', event.srcElement.scrollingElement.scrollHeight);
+    // console.log('event >>>', event.target.ownerDocument.defaultView.scrollY);
+    if (window.scrollY !== window.pageYOffset) {
+      console.log('event >>>', event.target);
+      console.log('window >>>', window.scrollY);
+      console.log('window >>>', window.pageYOffset);
+      console.log('this.$el.scrollTop >>>', this.$el.scrollTop);
+      console.log('this.$el.scrollHeight >>>', this.$el.scrollHeight);
+      console.log('this.$el >>>', this.$el);
+    }
+    // console.log('document >>>', window.document.scrollingElement.scrollHeight);
+    return window.scrollY;
+  }
+
   public created() {
     this.getList();
+    window.addEventListener('scroll', this.handleScroll);
+
+    // console.log('listData >>>', this.listData);
+    // console.log('this.$refs >>>', this.$refs);
+    // console.log('window.scroll >>>', window);
+  }
+  public destroyed() {
+    window.removeEventListener('scroll', this.handleScroll);
+    console.log('디스트로이드 this.$el.scrollTop >>>', this.$el.scrollTop);
+  }
+  public mounted() {
+    // window.addEventListener('scroll', function(e: any) {
+    //   if (e.pageY > window.innerHeight * 0.05) {
+    //     console.log('over 5%'); //use your function here
+    //   }
+    // });
+    // console.log('this.$el.scrollHeight >>>', this.$el.scrollHeight);
+    // console.log('this.$el.scrollTop >>>', this.$el.scrollTop);
   }
 }
 </script>
@@ -257,7 +364,6 @@ export default class Feed extends Vue {
           @include font(18px, bold);
           color: #282c30;
           margin-bottom: 6px;
-          background-color: violet;
         }
 
         h2 {
