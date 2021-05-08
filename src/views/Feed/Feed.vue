@@ -1,124 +1,126 @@
 <template>
   <main id="feedPage">
-    <!-- 테스트 후 삭제 예정 -->
-    <button type="button" @click="increase">증가</button>
-    <button type="button" @click="decrease">감소</button>
-    <div>{{ count }}</div>
-    <!-- <div @click="getList">asdasd</div> -->
-    <div>{{ isToggleBtn }}</div>
-    <!-- 테스트 후 삭제 예정 -->
     <section class="mainSection">
       <aside class="sideBar">
         <button type="button" class="loginBtn">로그인</button>
       </aside>
       <section class="listSection">
-        <section class="filterSection">
-          <ul>
-            <li
-              @click="filterToggleEvent"
-              :class="isToggleBtn ? 'filterBtnOn' : 'filterBtnOff'"
-            >
-              <div class="circleIcon" />
-              오름차순
-            </li>
-            <li
-              @click="filterToggleEvent"
-              :class="isToggleBtn ? 'filterBtnOff' : 'filterBtnOn'"
-            >
-              <div class="circleIcon" />
-              내림차순
-            </li>
-          </ul>
-          <button type="button">필터</button>
-        </section>
-        <article class="articleSection">
-          <div class="categoryPart">
-            <p>category_name</p>
-            <p>id</p>
-          </div>
-          <div class="authorPart">
-            <p>user_id</p>
-            <p>create_at(2020-02-02)</p>
-          </div>
-          <!-- {list.description.length > 25
-                  ? `${list.description.slice(0, 25)}...`
-                  : list.description} -->
-          <h1>
-            Title Title Title Title Title Title Title Title Title Title Title
-            Title Title Title
-          </h1>
-          <h2>content content content content content</h2>
-        </article>
-        <article class="adSection">
-          <p>sponsored</p>
-          <div>
-            <img src="@/assets/images/style1.png" alt="sample" />
-            <div>
+        <Sort />
+        <div class="articleSection">
+          <div v-for="(list, idx) in listData" :key="list.id">
+            <article class="article" v-if="(idx + 1) % 4 !== 0">
+              <div class="categoryPart">
+                <div>length : {{ idx + 1 }}</div>
+                <p>categoy_id : {{ list.category_id }}</p>
+                <p>id : {{ list.id }}</p>
+              </div>
+              <div class="authorPart">
+                <p>user_id : {{ list.user_id }}</p>
+                <p>
+                  created_at :
+                  {{ list.created_at.slice(0, list.created_at.indexOf('T')) }}
+                </p>
+              </div>
               <h1>
-                Title Title Title Title Title Title Title Title Title Title
-                Title Title Title Title Title Title Title Title Title Title
-                Title Title
+                {{
+                  list.title.length > 25
+                    ? `${list.title.slice(0, 25)}...`
+                    : list.title
+                }}
               </h1>
               <h2>
-                contents contents contents contents contents contents contents
-                contents contents contents contents contents contents contents
-                contents contents contents contents contents contents contents
-                contents contents contents contents contents contents contents
-                contents contents contents contents contents contents contents
-                contents contents contents contents contents contents contents
+                {{
+                  list.contents.length > 25
+                    ? `${list.contents.slice(0, 25)}...`
+                    : list.contents
+                }}
               </h2>
+            </article>
+
+            <div v-else>
+              <article class="adSection" v-for="ad in adData" :key="ad.id">
+                <p>sponsored</p>
+                <div>
+                  <img
+                    :src="`https://cdn.comento.kr/assignment/${ad.img}`"
+                    :alt="`https://cdn.comento.kr/assignment/${ad.img}`"
+                  />
+                  <div>
+                    <h1>
+                      {{
+                        ad.title.length > 25
+                          ? `${ad.title.slice(0, 50)}...`
+                          : ad.title
+                      }}
+                    </h1>
+                    <h2>
+                      {{
+                        ad.contents.length > 25
+                          ? `${ad.contents.slice(0, 50)}...`
+                          : ad.contents
+                      }}
+                    </h2>
+                  </div>
+                </div>
+              </article>
             </div>
           </div>
-        </article>
+          <div class="loadingIcon" v-if="loading"></div>
+        </div>
       </section>
     </section>
   </main>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
-import axios from 'axios';
+import Sort from '@/components/Sort.vue';
 
 const FeedModule = namespace('Feed');
 
-@Component
+@Component({
+  components: {
+    Sort,
+  },
+  // watch: {
+  //   adtest(text: string): string {
+  //     return text.length > 25 ? `${text.slice(0, 50)}...` : text;
+  //   },
+  // },
+})
 export default class Feed extends Vue {
-  // [x: string]: any;
-  @FeedModule.State('isToggleBtn')
-  public readonly 'isToggleBtn': boolean;
+  private test: boolean = true;
 
-  @FeedModule.Getter('count')
-  public readonly 'count': number;
+  @FeedModule.State('loading')
+  private readonly 'loading': boolean;
 
-  @FeedModule.Action('filterToggleEvent')
-  public readonly 'filterToggleEvent': any;
-  @FeedModule.Action('increase')
-  public readonly 'increase': any;
-  @FeedModule.Action('decrease')
-  public readonly 'decrease': any;
+  @FeedModule.Getter('listData')
+  private readonly 'listData': string[];
+
+  @FeedModule.Getter('adData')
+  private readonly 'adData': string[];
+
   @FeedModule.Action('getList')
-  public readonly 'getList': any;
+  private readonly 'getList': any;
 
-  // public getList<T>(url = `${BaseURL}/api/list`): Promise<T> {
-  //   return fetch(url, {
-  //     method: 'GET',
-  //     headers: {
-  //       Accept: 'application/json',
-  //     },
-  //     // params: {
-  //     //   page: int,
-  //     //   ord: string(asc, desc),
-  //     //   category: array(category_id),
-  //     //   limit: int(perPage),
-  //     // },
-  //   }).then((res) => {
-  //     console.log(res);
-  //     return res.json();
-  //   });
+  @FeedModule.Action('infinityScroll')
+  private readonly 'infinityScroll': any;
+
+  // get pageCount() {
+  //   return Math.ceil(this.limit);
+  // }
+  // get pageOffset() {
+  //   return (this as any).maxPerPage * (this as any).currentPage;
   // }
   public created() {
     this.getList();
+  }
+  public mounted() {
+    window.addEventListener('scroll', this.infinityScroll);
+  }
+  public destroyed() {
+    // window.removeEventListener('scroll', this.infinityScroll);
   }
 }
 </script>
@@ -158,113 +160,80 @@ export default class Feed extends Vue {
       @include size($listSectionWidth);
       margin-top: 50px;
 
-      .filterSection {
-        @include size(inherit, 24px);
-        @include flex(space-between, center);
-        margin-bottom: 11px;
-
-        ul {
-          @include flex($align-items: center);
-
-          @mixin toggleStyle() {
-            @include size(59px, 19px);
-            @include font(13px);
-            margin-right: 10px;
-            cursor: pointer;
-
-            & .circleIcon {
-              @include size(6px, 6px);
-              margin-right: 5px;
-              border-radius: 3px;
-            }
-          }
-
-          .filterBtnOn {
-            @include flex(center, center);
-            @include toggleStyle;
-            color: $darkGrayColor;
-
-            .circleIcon {
-              background-color: $baseColor;
-            }
-          }
-
-          .filterBtnOff {
-            @include flex(center, center);
-            @include toggleStyle;
-            color: #adb5bd;
-
-            .circleIcon {
-              background-color: $lightGrayColor;
-            }
-          }
-        }
-      }
-
-      button {
-        @include size(48px, 24px);
-        @include font(13px);
-        border: 1px solid $lightGrayColor;
-        border-radius: 3px;
-        color: #adb5bd;
+      .loadingIcon {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+        height: 50px;
+        margin: 50px 0px;
+        border-radius: 50%;
+        border: 5px solid $baseColor;
+        opacity: 0.7;
+        border-top: 5px solid #fff;
+        animation: animate 1.5s infinite linear;
       }
 
       .articleSection {
-        @include size(inherit, 179px);
-        margin-bottom: 30px;
-        border: 1px solid $lightGrayColor;
-        border-radius: 5px;
-        padding: 20px 30px;
+        /* @include size(inherit, fit-content); */
 
-        .categoryPart {
-          @include flex(space-between, flex-start);
-          @include size($listSectionWidth - 60px, 19px + 11px);
-          @include font(13px);
-          margin-bottom: 15px;
-          border-bottom: 1px solid $lightGrayColor;
+        .article {
+          @include size(inherit, 179px);
+          margin-bottom: 30px;
+          border: 1px solid $lightGrayColor;
+          border-radius: 5px;
+          padding: 20px 30px;
 
-          p:first-child {
-            color: #7e848a;
-          }
-          p:last-child {
-            color: #adb5bd;
-          }
-        }
+          .categoryPart {
+            @include flex(space-between, flex-start);
+            @include size($listSectionWidth - 60px, 19px + 11px);
+            @include font(13px);
+            margin-bottom: 15px;
+            border-bottom: 1px solid $lightGrayColor;
 
-        .authorPart {
-          @include flex($align-items: flex-start);
-          @include font(13px);
-          margin-bottom: 17px;
-
-          p:first-child {
-            margin-right: 10px;
-            color: $baseColor;
-          }
-          p:last-child {
-            color: $darkGrayColor;
-
-            &::before {
-              content: '|';
-              color: $lightGrayColor;
-              margin-right: 10px;
+            p:first-child {
+              color: #7e848a;
+            }
+            p:last-child {
+              color: #adb5bd;
             }
           }
-        }
 
-        h1 {
-          @include flex(flex-start, center);
-          @include size($h: 27px);
-          @include font(18px, bold);
-          color: #282c30;
-          margin-bottom: 6px;
-          background-color: violet;
-        }
+          .authorPart {
+            @include flex($align-items: flex-start);
+            @include font(13px);
+            margin-bottom: 17px;
 
-        h2 {
-          @include flex(flex-start, center);
-          @include size($h: 24px);
-          @include font(16px);
-          color: $darkGrayColor;
+            p:first-child {
+              margin-right: 10px;
+              color: $baseColor;
+            }
+            p:last-child {
+              color: $darkGrayColor;
+
+              &::before {
+                content: '|';
+                color: $lightGrayColor;
+                margin-right: 10px;
+              }
+            }
+          }
+
+          h1 {
+            @include flex(flex-start, center);
+            @include size($h: 27px);
+            @include font(18px, bold);
+            color: #282c30;
+            margin-bottom: 6px;
+          }
+
+          h2 {
+            @include flex(flex-start, center);
+            @include size($h: 24px);
+            @include font(16px);
+            color: $darkGrayColor;
+          }
         }
       }
 
@@ -289,11 +258,11 @@ export default class Feed extends Vue {
             margin-right: 29.5px;
             object-fit: contain;
             border: 1px solid $lightGrayColor;
+            object-fit: cover;
           }
 
           div {
             display: block;
-            background-color: yellow;
             h1 {
               @include size(465px, 55px);
               @include font(18px, bold);
@@ -308,6 +277,14 @@ export default class Feed extends Vue {
         }
       }
     }
+  }
+}
+@keyframes animate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 </style>
