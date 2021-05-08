@@ -5,14 +5,16 @@ import { getList, getCategory, getAds, getView } from '@/api/feed';
 interface FeedModule {
   isToggleBtn: boolean;
   listData: string[];
+  adData: string[];
   // category_id: number;
   page: number;
+  adPage: number;
   ord: string;
   limit: number;
+  // adLimit : number;
   category: number;
-  id: number;
-  test: string;
   total: number;
+  loading: boolean;
 }
 
 const Feed: Module<FeedModule, RootState> = {
@@ -20,13 +22,15 @@ const Feed: Module<FeedModule, RootState> = {
   state: {
     isToggleBtn: true,
     listData: [],
+    adData: [],
     page: 1,
+    adPage: 1,
     ord: 'asc',
     limit: 10,
+    // adLimit : limit % 4;
     category: 1,
-    id: 0,
-    test: '2019-11-11T06:00:52.000000Z',
     total: 0,
+    loading: false, // 원래 초기값 true
   },
   mutations: {
     setToggle(state, isToggleBtn: boolean) {
@@ -35,11 +39,23 @@ const Feed: Module<FeedModule, RootState> = {
     setListData(state, listData: string[]) {
       state.listData = listData;
     },
+    setAdData(state, adData: string[]) {
+      state.adData = adData;
+    },
     setSort(state, ord: string) {
       state.ord = ord;
     },
     setTotal(state, total: number) {
       state.total = total;
+    },
+    setAdpage(state, adPage: number) {
+      state.adPage = adPage;
+    },
+    setLimit(state, limit: number) {
+      state.limit = limit;
+    },
+    setLoading(state, loading: boolean) {
+      state.loading = loading;
     },
   },
   actions: {
@@ -55,54 +71,47 @@ const Feed: Module<FeedModule, RootState> = {
         }
       }
     },
-    // Object.assign(state.params, { page: state.params.page });
-    // async getList({ state }) {
-    //   // https://problem.comento.kr/api/ads?page=1&limit=10&ord=asc&category_id=2
-    //   const result = await getList(state.category);
-    //   console.log(result);
-    // },
-
-    // async getCategory({ state }) {
-    //   const result = await getCategory(state.params);
-    //   console.log(result);
-    // },
-
     async getList({ state, commit }) {
-      // https://problem.comento.kr/api/ads?page=1&limit=10&ord=asc&category_id=2
-      // const result = await getList(2, 10, 'asc', 1);
-
       const listResult = await getList(
         state.page,
         state.limit,
         state.ord,
         state.category,
       );
-      const adResult = await getAds(state.page, state.limit);
-      const categoryResult = await getCategory();
+      const adResult = await getAds(state.adPage, 1);
+
       commit('setListData', listResult.data.data);
+      commit('setAdData', adResult.data.data);
+      commit('setAdpage', state.page + 1);
       commit('setTotal', listResult.data.total);
-      // if (state.listData.length % 4 === 0) {
-      // }
-      console.log('listResult >>>', listResult.data.data);
-      console.log('total >>>', state.total);
-      console.log('adResult >>>', adResult.data.data);
-      console.log('categoryResult >>>', categoryResult.data.category);
-      console.log('함수 안 ListData >>>', state.listData.length);
-      return listResult;
     },
 
     async changeSort({ commit, dispatch }) {
       commit('setSort', 'desc');
       await dispatch('getList');
     },
-    // async getTest({ state }) {
-    //   // https://problem.comento.kr/api/ads?page=1&limit=10&ord=asc&category_id=2
-    //   const result = await getTest(state.id);
-    //   console.log(result);
-    // },
+
+    infinityScroll({ state, commit, dispatch }) {
+      const totalLimit: number = Math.ceil(state.total / 10) * 10;
+      const nowScrollData: number = window.scrollY + window.innerHeight;
+      const documentHeight: number = document.body.offsetHeight;
+
+      if (nowScrollData >= documentHeight && state.limit <= totalLimit) {
+        commit('setLoading', true);
+        setTimeout(() => {
+          commit('setLimit', state.limit + 10);
+
+          dispatch('getList');
+        }, 2000);
+      }
+      if (state.limit >= totalLimit) {
+        commit('setLoading', false);
+      }
+    },
   },
   getters: {
     listData: (state) => state.listData,
+    adData: (state) => state.adData,
   },
 };
 

@@ -2,11 +2,11 @@
   <div id="app">
     <Nav msg="[210508]유승현" />
     <router-view />
-    <div id="nav">
-      <!-- <router-link to="/">Home</router-link> |
+    <!-- <div id="nav"> -->
+    <!-- <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> -->
-    </div>
   </div>
+  <!-- </div> -->
 </template>
 
 <script lang="ts">
