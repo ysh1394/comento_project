@@ -23,7 +23,7 @@ export default class Loading extends Vue {
   transform: translate(-50%, -50%);
   width: 50px;
   height: 50px;
-  margin: 50px 0px;
+  margin-top: 100px;
   border-radius: 50%;
   border: 5px solid $baseColor;
   opacity: 0.7;

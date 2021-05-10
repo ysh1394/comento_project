@@ -50,7 +50,6 @@ export default class Sort extends Vue {
 
   ul {
     @include flex($align-items: center);
-
     @mixin toggleStyle() {
       @include size(59px, 19px);
       @include font(13px);

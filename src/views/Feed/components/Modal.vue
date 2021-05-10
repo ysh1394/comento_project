@@ -22,8 +22,6 @@
             }}</label>
           </div>
         </div>
-        <div>category >>>{{ category }}</div>
-        <div>categoryFilter >>>{{ categoryFilter }}</div>
         <div class="errorMsg" v-if="isError">필터를 선택해 주세요</div>
         <div class="btnWrap">
           <button class="saveBtn" type="submit" @click="filterEvent">
@@ -61,6 +59,7 @@ export default class Modal extends Vue {
 
   @FeedModule.State('category')
   public readonly 'category': string;
+
   @FeedModule.State('categoryFilter')
   public readonly 'categoryFilter': string;
 
@@ -107,7 +106,7 @@ export default class Modal extends Vue {
 
     .loadingIcon {
       position: absolute;
-      top: 90px;
+      top: 30px;
     }
 
     .cancelBtn {

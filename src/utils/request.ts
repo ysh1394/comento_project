@@ -1,5 +1,4 @@
 import axios from 'axios';
-// import store from '@/store';
 
 const BaseURL: string = 'https://problem.comento.kr';
 
@@ -9,9 +8,6 @@ const service = axios.create({
   headers: {
     Accept: 'application/json',
   },
-  // timeout: 5000, // request timeout
-  // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
 });
 
 export default service;
