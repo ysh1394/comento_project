@@ -10,7 +10,6 @@
           <div v-for="(list, idx) in listData" :key="list.id">
             <article class="article" v-if="(idx + 1) % 4 !== 0">
               <div class="categoryPart">
-                <div>length : {{ idx + 1 }}</div>
                 <p>categoy_id : {{ list.category_id }}</p>
                 <p>id : {{ list.id }}</p>
               </div>
@@ -23,15 +22,15 @@
               </div>
               <h1>
                 {{
-                  list.title.length > 25
-                    ? `${list.title.slice(0, 25)}...`
+                  list.title.length > 50
+                    ? `${list.title.slice(0, 50)}...`
                     : list.title
                 }}
               </h1>
               <h2>
                 {{
-                  list.contents.length > 25
-                    ? `${list.contents.slice(0, 25)}...`
+                  list.contents.length > 50
+                    ? `${list.contents.slice(0, 50)}...`
                     : list.contents
                 }}
               </h2>
@@ -65,7 +64,8 @@
               </article>
             </div>
           </div>
-          <div class="loadingIcon" v-if="loading"></div>
+          <Loading v-if="isLoading" />
+          <!-- <div class="loadingIcon" v-if="isLoading"></div> -->
         </div>
       </section>
     </section>
@@ -75,13 +75,17 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
-import Sort from '@/components/Sort.vue';
+import Sort from '@/views/Feed/components/Sort.vue';
+import Modal from '@/views/Feed/components/Modal.vue';
+import Loading from '@/components/Loading.vue';
 
 const FeedModule = namespace('Feed');
 
 @Component({
   components: {
     Sort,
+    Modal,
+    Loading,
   },
   // watch: {
   //   adtest(text: string): string {
@@ -92,14 +96,17 @@ const FeedModule = namespace('Feed');
 export default class Feed extends Vue {
   private test: boolean = true;
 
-  @FeedModule.State('loading')
-  private readonly 'loading': boolean;
+  @FeedModule.State('isLoading')
+  private readonly 'isLoading': boolean;
 
   @FeedModule.Getter('listData')
-  private readonly 'listData': string[];
+  private readonly 'listData': any[];
 
   @FeedModule.Getter('adData')
-  private readonly 'adData': string[];
+  private readonly 'adData': any[];
+
+  @FeedModule.Action('getCategory')
+  private readonly 'getCategory': any;
 
   @FeedModule.Action('getList')
   private readonly 'getList': any;
@@ -107,14 +114,9 @@ export default class Feed extends Vue {
   @FeedModule.Action('infinityScroll')
   private readonly 'infinityScroll': any;
 
-  // get pageCount() {
-  //   return Math.ceil(this.limit);
-  // }
-  // get pageOffset() {
-  //   return (this as any).maxPerPage * (this as any).currentPage;
-  // }
   public created() {
     this.getList();
+    // console.log(this.$store.state.Feed.isModal);
   }
   public mounted() {
     window.addEventListener('scroll', this.infinityScroll);
