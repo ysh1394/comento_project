@@ -8,33 +8,38 @@
         <Sort />
         <div class="articleSection">
           <div v-for="(list, idx) in listData" :key="list.id">
-            <article class="article" v-if="(idx + 1) % 4 !== 0">
-              <div class="categoryPart">
-                <p>categoy_id : {{ list.category_id }}</p>
-                <p>id : {{ list.id }}</p>
-              </div>
-              <div class="authorPart">
-                <p>user_id : {{ list.user_id }}</p>
-                <p>
-                  created_at :
-                  {{ list.created_at.slice(0, list.created_at.indexOf('T')) }}
-                </p>
-              </div>
-              <h1>
-                {{
-                  list.title.length > 50
-                    ? `${list.title.slice(0, 50)}...`
-                    : list.title
-                }}
-              </h1>
-              <h2>
-                {{
-                  list.contents.length > 50
-                    ? `${list.contents.slice(0, 50)}...`
-                    : list.contents
-                }}
-              </h2>
-            </article>
+            <router-link
+              :to="{ name: 'FeedDetail', params: { id: list.id } }"
+              v-if="(idx + 1) % 4 !== 0"
+            >
+              <article class="article">
+                <div class="categoryPart">
+                  <p>categoy_id : {{ list.category_id }}</p>
+                  <p>id : {{ list.id }}</p>
+                </div>
+                <div class="authorPart">
+                  <p>user_id : {{ list.user_id }}</p>
+                  <p>
+                    created_at :
+                    {{ list.created_at.slice(0, list.created_at.indexOf('T')) }}
+                  </p>
+                </div>
+                <h1>
+                  {{
+                    list.title.length > 50
+                      ? `${list.title.slice(0, 50)}...`
+                      : list.title
+                  }}
+                </h1>
+                <h2>
+                  {{
+                    list.contents.length > 50
+                      ? `${list.contents.slice(0, 50)}...`
+                      : list.contents
+                  }}
+                </h2>
+              </article>
+            </router-link>
 
             <div v-else>
               <article class="adSection" v-for="ad in adData" :key="ad.id">
@@ -65,7 +70,6 @@
             </div>
           </div>
           <Loading v-if="isLoading" />
-          <!-- <div class="loadingIcon" v-if="isLoading"></div> -->
         </div>
       </section>
     </section>
@@ -73,11 +77,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 import Sort from '@/views/Feed/components/Sort.vue';
 import Modal from '@/views/Feed/components/Modal.vue';
 import Loading from '@/components/Loading.vue';
+import debounce from '@/utils/util';
 
 const FeedModule = namespace('Feed');
 
@@ -87,15 +92,8 @@ const FeedModule = namespace('Feed');
     Modal,
     Loading,
   },
-  // watch: {
-  //   adtest(text: string): string {
-  //     return text.length > 25 ? `${text.slice(0, 50)}...` : text;
-  //   },
-  // },
 })
 export default class Feed extends Vue {
-  private test: boolean = true;
-
   @FeedModule.State('isLoading')
   private readonly 'isLoading': boolean;
 
@@ -119,10 +117,10 @@ export default class Feed extends Vue {
     // console.log(this.$store.state.Feed.isModal);
   }
   public mounted() {
-    window.addEventListener('scroll', this.infinityScroll);
+    window.addEventListener('scroll', debounce(this.infinityScroll, 300));
   }
   public destroyed() {
-    // window.removeEventListener('scroll', this.infinityScroll);
+    window.removeEventListener('scroll', this.infinityScroll);
   }
 }
 </script>
@@ -161,31 +159,19 @@ export default class Feed extends Vue {
       $listSectionWidth: 865px;
       @include size($listSectionWidth);
       margin-top: 50px;
-
-      .loadingIcon {
-        position: relative;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 50px;
-        height: 50px;
-        margin: 50px 0px;
-        border-radius: 50%;
-        border: 5px solid $baseColor;
-        opacity: 0.7;
-        border-top: 5px solid #fff;
-        animation: animate 1.5s infinite linear;
-      }
+      margin-bottom: 100px;
 
       .articleSection {
-        /* @include size(inherit, fit-content); */
-
         .article {
           @include size(inherit, 179px);
           margin-bottom: 30px;
           border: 1px solid $lightGrayColor;
           border-radius: 5px;
           padding: 20px 30px;
+
+          &:hover {
+            border: 1px solid $baseColor;
+          }
 
           .categoryPart {
             @include flex(space-between, flex-start);
@@ -197,6 +183,7 @@ export default class Feed extends Vue {
             p:first-child {
               color: #7e848a;
             }
+
             p:last-child {
               color: #adb5bd;
             }
@@ -211,6 +198,7 @@ export default class Feed extends Vue {
               margin-right: 10px;
               color: $baseColor;
             }
+
             p:last-child {
               color: $darkGrayColor;
 
@@ -255,6 +243,7 @@ export default class Feed extends Vue {
         }
         div {
           @include flex(flex-start, flex-start);
+
           img {
             @include size(310px, 179px);
             margin-right: 29.5px;
@@ -265,6 +254,7 @@ export default class Feed extends Vue {
 
           div {
             display: block;
+
             h1 {
               @include size(465px, 55px);
               @include font(18px, bold);
@@ -279,14 +269,6 @@ export default class Feed extends Vue {
         }
       }
     }
-  }
-}
-@keyframes animate {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 </style>
