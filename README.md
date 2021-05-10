@@ -1,24 +1,62 @@
 # comento_project
 
-## Project setup
+## comento 과제전형
+
+<br/>
+
+### 1. 프로젝트 기간 : 21.05.03 ~ 21.05.10 (1주일)
+
+<br/>
+
+### 2. 참여자 : 유승현 (프론트엔드개발자)
+
+<br/>
+
+### 3. 프로젝트 요약
+
+#### 피드 시스템 개발하기
+
+#### Adobe XD 시안 참고하여 UI 작업 진행 + API문서 활용하여 서버 통신
+
+### 4. 적용 기술
+
+- 주요기술 : `Vue.js`, `Typescript`
+- 상태관리 라이브러리 : `Vuex`
+- HTTP 통신 라이브러리 : `Axios`
+- CSS 전처리기 : `Scss`
+- 코딩 컨벤션 라이브러리 : `tslint`, `prettier`
+
 ```
-npm install
+이 외 라이브러리 사용 없이 구현하였습니다.
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### 5. 구현 목표
 
-### Compiles and minifies for production
-```
-npm run build
-```
+- 피드 페이지
+  > 무한스크롤 : 스크롤 이벤트를 활용하여 구현 완료 (과부하 방지를 위한 디바운스 기능 추가)
+  > 정렬/필터 : 쿼리스트링 활용 기능 구현 완료
+  > 모달창 : Boolean값으로 On/Off 관리
+  > 디테일 페이지 : params를 활용하여 라우트 페이지 이동
+  > 광고 삽입 : v-for 두번째 인자로 4배수 마다 광고 삽입 구현
+  > ->> 특이 사항: 광고 삽입으로 인해 4배수 게시글들이 사라짐 (수정 필요)
+  > 고객센터 대응 : 미구현
+- 반응형 웹
+  > 미구현
 
-### Lints and fixes files
-```
-npm run lint
-```
+### 6. 느낀점
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- 처음 사용하는 타입스크립트로 인해 제대로 된 타입을 쓰는지 조차 잘 모르겠었으나, 조금씩 타입에 대한 이해가 생길 수록 꼼꼼히 확인하게 되는 것 같았습니다.
+- 라이브러리 없이 vue를 사용하면서 그동안 놓쳤던 부분과 이해가 안되던 부분을 많이 배울 수 있었습니다.
+- 실제 실무와 비슷하게 과제가 주어졌기에 정말 재미있게 진행하였습니다!
+  <br/>
+  <br/>
+
+### 7. 기타
+
+- gitHub 링크 : https://github.com/ysh1394/comento_project
+
+- 데모 영상(링크) : https://drive.google.com/file/d/1pMqz4jdiHF25D4DgJtGvE435SqfMCQr4/view?usp=sharing
+
+<br/>
+<br/>
+<br/>
