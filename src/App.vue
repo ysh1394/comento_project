@@ -1,7 +1,10 @@
 <template>
   <div id="app">
+    <Modal v-if="isModal" />
+    <!-- <Icon /> -->
     <Nav msg="[210508]유승현" />
     <router-view />
+    <!-- </Modal> -->
     <!-- <div id="nav"> -->
     <!-- <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> -->
@@ -10,19 +13,23 @@
 </template>
 
 <script lang="ts">
-// import defineComponent from 'vue';
 import { Component, Vue } from 'vue-property-decorator';
-import Nav from '@/components/Nav.vue'; // @ is an alias to /src
+import Nav from '@/components/Nav.vue';
+import Modal from '@/views/Feed/components/Modal.vue';
+import { namespace } from 'vuex-class';
+
+const FeedModule = namespace('Feed');
 
 @Component({
   components: {
     Nav,
+    Modal,
   },
 })
-// const App = defineComponent({
-//   // type inference enabled
-// });
-export default class App extends Vue {}
+export default class App extends Vue {
+  @FeedModule.State('isModal')
+  public readonly 'isModal': boolean;
+}
 </script>
 
 <style lang="scss">
@@ -34,6 +41,10 @@ export default class App extends Vue {}
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0 !important;
+  }
 } */
 
 #nav {

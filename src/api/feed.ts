@@ -4,16 +4,13 @@ export function getList(
   page: number,
   limit: number,
   ord: string,
-  category: number,
+  category: string,
 ) {
   // console.log(data);
 
   return request({
-    // https://problem.comento.kr/api/list?page=1&limit=10&ord=asc&category[]=1
-    // url: `/api/list?page=1&limit=10&ord=desc&category[]=1`,
-    url: `/api/list?page=${page}&limit=${limit}&ord=${ord}&category[]=${category}`,
+    url: `/api/list?page=${page}&limit=${limit}&ord=${ord}${category}`,
     method: 'get',
-    // params: data,
   });
 }
 

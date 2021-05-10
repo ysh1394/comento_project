@@ -16,7 +16,7 @@
         내림차순
       </li>
     </ul>
-    <button type="button" class="filterBtn">필터</button>
+    <button type="button" class="filterBtn" @click="modalEvent">필터</button>
   </section>
 </template>
 
@@ -36,6 +36,9 @@ export default class Sort extends Vue {
 
   @FeedModule.Action('changeSort')
   public readonly 'changeSort': any;
+
+  @FeedModule.Action('modalEvent')
+  public readonly 'modalEvent': any;
 }
 </script>
 
@@ -88,6 +91,7 @@ export default class Sort extends Vue {
     border: 1px solid $lightGrayColor;
     border-radius: 3px;
     color: #adb5bd;
+    cursor: pointer;
   }
 }
 </style>
